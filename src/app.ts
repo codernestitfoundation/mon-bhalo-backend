@@ -1,7 +1,9 @@
 import express ,{  Request, Response } from 'express';
+import httpStatus from 'http-status-codes';
 import cors from 'cors';
 import router from './app/routes';
 import { globalErrorHandler } from './app/middlewares/globalErrorHandler';
+import notFound from './app/middlewares/notFound';
 
 
 
@@ -15,12 +17,13 @@ app.use("/api/v1/", router);
 
 
 app.get ("/", (req: Request, res: Response) => {
-    res.status(200).json({
+    res.status(httpStatus.OK).json({
     message: "Welcome to Mon Bhalo Server"})
 });
 
 
 app.use(globalErrorHandler);
+app.use(notFound);
 
 
 
