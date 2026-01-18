@@ -33,7 +33,7 @@ export interface IUser {
     isVerified?: boolean;
     isDeleted?: boolean;
     isActive?: IsActive;
-    auths : IAuthProvider[]
+    auths : IAuthProvider[];
     appointment?: Types.ObjectId[];
     psychologist?: Types.ObjectId[];
 }
