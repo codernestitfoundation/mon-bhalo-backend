@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 
 import httpStatus from 'http-status-codes';
@@ -5,6 +6,9 @@ import { NextFunction, Request, Response } from 'express';
 import { UserServices } from './user.service';
 import { catchAsync } from '../../utils/catchAsync';
 import sendResponse from '../../utils/sendResponse';
+import { verifyToken } from '../../utils/jwt';
+import { envVars } from '../../config/env';
+import { JwtPayload } from 'jsonwebtoken';
 
 const createUser = catchAsync (async (req: Request, res: Response, next: NextFunction) => {
    
@@ -20,6 +24,21 @@ const createUser = catchAsync (async (req: Request, res: Response, next: NextFun
         })
 });
 
+const updateUser = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+    
+    const userId = req.params.id;
+    const verifiedToken = req.user;
+
+    const payload = req.body;
+    const user = await UserServices.updateUser(userId as string, payload, verifiedToken as JwtPayload)
+
+    sendResponse(res, {
+        success: true,
+        statusCode: httpStatus.CREATED,
+        message: "User Updated Successfully",
+        data: user,
+    })
+})
 
 const getAllUsers = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
     const result = await UserServices.getAllUsers();
@@ -34,5 +53,6 @@ const getAllUsers = catchAsync(async (req: Request, res: Response, next: NextFun
 
 export const UserControllers = {
     createUser,
-    getAllUsers
+    getAllUsers,
+    updateUser,
 }
