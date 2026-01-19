@@ -3,8 +3,8 @@ import httpStatus from "http-status-codes";
 import AppError from "../../errorHelpers/AppError";
 import { IsActive, IUser } from "../user/user.interface";
 import { User } from "../user/user.model";
-import { envVars } from "../../config/env";
-import jwt, { SignOptions } from "jsonwebtoken";
+import { createNewAccessTokenWithRefreshToken, createUserTokens } from "../../utils/userTokens";
+
 
 const credentialsLogin = async (payload: Partial<IUser>) => {
   const { email, password } = payload;
@@ -32,22 +32,27 @@ const credentialsLogin = async (payload: Partial<IUser>) => {
   if (!isPasswordMatched) {
     throw new AppError(httpStatus.UNAUTHORIZED, "Password is incorrect");
   }
-
-    const jwtPayload = {
-    id: isUserExist._id,
-    email: isUserExist.email,
-    role: isUserExist.role,
-  };
-
-  const accessToken = jwt.sign(jwtPayload, envVars.JWT_ACCESS_SECRET, {
-    expiresIn: envVars.JWT_ACCESS_EXPIRES as SignOptions['expiresIn'],
-  });
+  
+  const userTokens = createUserTokens(isUserExist);
+  const { accessToken, refreshToken } = userTokens;
 
   return {
     accessToken,
+    refreshToken,
+    user: isUserExist
+  };
+};
+
+const getNewAccessToken = async(refreshToken: string) => {
+
+  const accessToken = await createNewAccessTokenWithRefreshToken(refreshToken)
+
+  return {
+    accessToken
   };
 };
 
 export const AuthService = {
   credentialsLogin,
+  getNewAccessToken
 };

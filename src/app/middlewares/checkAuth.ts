@@ -10,13 +10,14 @@ import { verifyToken } from "../utils/jwt";
 export const checkAuth = (...authRoles: string[]) => async (req: Request, res: Response, next: NextFunction) => {
 
     try {
-        const accessToken = req.headers.authorization;
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const accessToken = req.headers.authorization || req.cookies;
 
         if (!accessToken) {
             throw new AppError(httpStatus.UNAUTHORIZED, "No Token Received");
         }
 
-        const verifiedToken = verifyToken(accessToken, envVars.JWT_ACCESS_SECRET) as JwtPayload
+        const verifiedToken = verifyToken(accessToken as string, envVars.JWT_ACCESS_SECRET) as JwtPayload
 
         const isUserExist = await User.findOne({ email: verifiedToken.email })
 

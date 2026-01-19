@@ -19,6 +19,7 @@ export enum IsActive {
 }
 
 export interface IUser {
+  _id?: Types.ObjectId;
   name: {
     firstName: string;
     lastName: string;

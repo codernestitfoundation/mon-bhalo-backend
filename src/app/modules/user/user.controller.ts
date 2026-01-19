@@ -6,21 +6,17 @@ import { NextFunction, Request, Response } from 'express';
 import { UserServices } from './user.service';
 import { catchAsync } from '../../utils/catchAsync';
 import sendResponse from '../../utils/sendResponse';
-import { verifyToken } from '../../utils/jwt';
-import { envVars } from '../../config/env';
 import { JwtPayload } from 'jsonwebtoken';
 
 const createUser = catchAsync (async (req: Request, res: Response, next: NextFunction) => {
    
         const user = await UserServices.createUser(req.body);
 
-        const {password, ...userData} = user.toObject();
-
         sendResponse(res, {
             success: true,
             statusCode: httpStatus.CREATED,
             message: "User created successfully",
-            data: userData
+            data: user
         })
 });
 

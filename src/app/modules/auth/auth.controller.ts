@@ -4,13 +4,22 @@ import httpStatus from "http-status-codes";
 import { catchAsync } from "../../utils/catchAsync";
 import sendResponse from "../../utils/sendResponse";
 import { AuthService } from "./auth.service";
+import AppError from "../../errorHelpers/AppError";
 
 const credentialsLogin = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
 
     const loginInfo = await AuthService.credentialsLogin(req.body);
 
+    res.cookie("accessToken", loginInfo.accessToken, {
+      httpOnly: true,
+      secure: true,
+    })
 
+    res.cookie("refreshToken", loginInfo.refreshToken, {
+      httpOnly: true,
+      secure: true,
+    })
 
     sendResponse(res, {
       statusCode: httpStatus.OK,
@@ -21,6 +30,25 @@ const credentialsLogin = catchAsync(
   },
 );
 
+
+const getNewAccessToken = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const refreshToken = req.cookies.refreshToken;
+    if (!refreshToken){
+      throw new AppError(httpStatus.BAD_REQUEST, "No refresh toke received")
+    }
+    const tokenInfo = await AuthService.getNewAccessToken(refreshToken);
+
+    sendResponse(res, {
+      statusCode: httpStatus.OK,
+      success: true,
+      message: "Access token generated successfully",
+      data: tokenInfo,
+    });
+  },
+);
+
 export const AuthController = {
   credentialsLogin,
+  getNewAccessToken
 };

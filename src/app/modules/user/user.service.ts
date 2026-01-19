@@ -35,7 +35,9 @@ const createUser = async (payload: Partial<IUser>) => {
     ...rest,
   });
 
-  return user;
+  const {password: pwd, ...userData} = user.toObject();
+
+  return userData;
 };
 
 
