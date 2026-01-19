@@ -10,11 +10,13 @@ const createUser = catchAsync (async (req: Request, res: Response, next: NextFun
    
         const user = await UserServices.createUser(req.body);
 
+        const {password, ...userData} = user.toObject();
+
         sendResponse(res, {
             success: true,
             statusCode: httpStatus.CREATED,
             message: "User created successfully",
-            data: user
+            data: userData
         })
 });
 
