@@ -17,6 +17,11 @@ export enum IsActive {
   INACTIVE = "INACTIVE",
   BLOCKED = "BLOCKED",
 }
+export enum Gender {
+  MALE = "MALE",
+  FEMALE = "FEMALE",
+  OTHER = "OTHER",
+}
 
 export interface IUser {
   _id?: Types.ObjectId;
@@ -25,6 +30,7 @@ export interface IUser {
     lastName: string;
   };
   email: string;
+  gender?: Gender;
   dob?: Date;
   password?: string;
   role: Role;

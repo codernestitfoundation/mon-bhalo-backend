@@ -11,7 +11,7 @@ export const checkAuth = (...authRoles: string[]) => async (req: Request, res: R
 
     try {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const accessToken = req.headers.authorization || req.cookies;
+        const {accessToken} = req.cookies;
 
         if (!accessToken) {
             throw new AppError(httpStatus.UNAUTHORIZED, "No Token Received");
@@ -22,13 +22,13 @@ export const checkAuth = (...authRoles: string[]) => async (req: Request, res: R
         const isUserExist = await User.findOne({ email: verifiedToken.email })
 
         if (!isUserExist) {
-            throw new AppError(httpStatus.BAD_REQUEST, "User does not exist")
+             throw new AppError(httpStatus.NOT_FOUND, "User does not exist");
         }
         if (!isUserExist.isVerified) {
-            throw new AppError(httpStatus.BAD_REQUEST, "User is not verified")
+            throw new AppError(httpStatus.BAD_REQUEST, "User email is not verified. Please verify your email to proceed.")
         }
         if (isUserExist.isActive === IsActive.BLOCKED || isUserExist.isActive === IsActive.INACTIVE) {
-            throw new AppError(httpStatus.BAD_REQUEST, `User is ${isUserExist.isActive}`)
+             throw new AppError(httpStatus.FORBIDDEN, `User account is ${isUserExist.isActive}. Please contact our support team.`);
         }
         if (isUserExist.isDeleted) {
             throw new AppError(httpStatus.BAD_REQUEST, "User is deleted")
