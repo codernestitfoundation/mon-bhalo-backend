@@ -1,0 +1,48 @@
+import { NextFunction, Request, Response } from "express";
+import httpStatus from "http-status-codes";
+import { JwtPayload } from "jsonwebtoken";
+import { envVars } from "../config/env";
+import AppError from "../errorHelpers/AppError";
+import { IsActive } from "../modules/user/user.interface";
+import { User } from "../modules/user/user.model";
+import { verifyToken } from "../utils/jwt";
+
+export const checkAuth = (...authRoles: string[]) => async (req: Request, res: Response, next: NextFunction) => {
+
+    try {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const {accessToken} = req.cookies;
+
+        if (!accessToken) {
+            throw new AppError(httpStatus.UNAUTHORIZED, "No Token Received");
+        }
+
+        const verifiedToken = verifyToken(accessToken as string, envVars.JWT_ACCESS_SECRET) as JwtPayload
+
+        const isUserExist = await User.findOne({ email: verifiedToken.email })
+
+        if (!isUserExist) {
+             throw new AppError(httpStatus.NOT_FOUND, "User does not exist");
+        }
+        if (!isUserExist.isVerified) {
+            throw new AppError(httpStatus.BAD_REQUEST, "User email is not verified. Please verify your email to proceed.")
+        }
+        if (isUserExist.isActive === IsActive.BLOCKED || isUserExist.isActive === IsActive.INACTIVE) {
+             throw new AppError(httpStatus.FORBIDDEN, `User account is ${isUserExist.isActive}. Please contact our support team.`);
+        }
+        if (isUserExist.isDeleted) {
+            throw new AppError(httpStatus.BAD_REQUEST, "User is deleted")
+        }
+
+        if (!authRoles.includes(verifiedToken.role)) {
+            throw new AppError(httpStatus.FORBIDDEN, "You are not permitted to view this route!!!")
+        }
+
+        req.user = verifiedToken
+        next()
+
+    } catch (error) {
+        console.log("jwt error", error);
+        next(error)
+    }
+}
