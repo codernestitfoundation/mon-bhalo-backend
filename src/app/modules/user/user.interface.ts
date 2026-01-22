@@ -41,6 +41,4 @@ export interface IUser {
   isDeleted?: boolean;
   isActive?: IsActive;
   auths: IAuthProvider[];
-  appointment?: Types.ObjectId[];
-  psychologist?: Types.ObjectId[];
 }

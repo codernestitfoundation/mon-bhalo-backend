@@ -35,9 +35,7 @@ const userSchema = new Schema<IUser>({
         type: String, 
         enum: Object.values(IsActive), 
         default: IsActive.ACTIVE },
-    auths: [authProviderSchema],
-    appointment: [{ type: Schema.Types.ObjectId, ref: "Appointment" }],
-    psychologist: [{ type: Schema.Types.ObjectId, ref: "Psychologist" }],
+    auths: [authProviderSchema]
 }, {
     timestamps: true,
     versionKey: false
