@@ -1,5 +1,6 @@
 import { Schema, model } from "mongoose";
 import { ApplicationStatus, IPsychologist } from "./psychologist.interface";
+import { IsActive } from "../user/user.interface";
 
 const educationSchema = new Schema({
   degree: { type: String, required: true },
@@ -30,7 +31,10 @@ const psychologistSchema = new Schema<IPsychologist>(
     },
     rating: { type: Number, default: 0 },
     totalSessions: { type: Number, default: 0 },
-    isActive: { type: Boolean, default: true },
+     isActive: { 
+            type: String, 
+            enum: Object.values(IsActive), 
+            default: IsActive.INACTIVE },
     isDeleted: { type: Boolean, default: false },
   },
   { timestamps: true,

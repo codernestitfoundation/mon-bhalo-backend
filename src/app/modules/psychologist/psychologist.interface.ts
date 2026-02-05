@@ -1,4 +1,5 @@
 import { Types } from "mongoose";
+import { IsActive } from "../user/user.interface";
 
 export enum ApplicationStatus {
   PENDING = "PENDING",
@@ -12,6 +13,7 @@ export interface IEducation {
   year: string;
 }
 
+
 export interface IPsychologist {
   userId?: Types.ObjectId;
   specialization: string[];
@@ -23,6 +25,6 @@ export interface IPsychologist {
   status?: ApplicationStatus;
   rating?: number;
   totalSessions?: number;
-  isActive?: boolean; 
-  isDeleted?: boolean;
+  isActive: IsActive; 
+  isDeleted: boolean;
 }
