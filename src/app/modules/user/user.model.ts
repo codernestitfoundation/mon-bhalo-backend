@@ -38,7 +38,14 @@ const userSchema = new Schema<IUser>({
     auths: [authProviderSchema]
 }, {
     timestamps: true,
-    versionKey: false
+    versionKey: false,
+    id: false,
+    toJSON: { virtuals: true },
+    toObject: { virtuals: true }
+})
+
+userSchema.virtual('fullName').get(function(this: IUser) {
+    return `${this.name.firstName} ${this.name.lastName}`;
 })
 
 export const User = model<IUser>("User", userSchema);

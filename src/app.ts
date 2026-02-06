@@ -8,6 +8,7 @@ import cookieParser from 'cookie-parser';
 import passport from 'passport';
 import expressSession from 'express-session'
 import "./app/config/passport"
+import { startPaymentExpiryJob } from './app/utils/paymentExpiryJob';
 
 
 
@@ -27,6 +28,8 @@ app.use(express.urlencoded({extended:true}))
 app.use(cors())
 
 app.use("/api/v1/", router);
+
+startPaymentExpiryJob();
 
 
 app.get ("/", (req: Request, res: Response) => {

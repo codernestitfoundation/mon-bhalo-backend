@@ -7,7 +7,7 @@ const router = Router();
 
 router.post("/generate", checkAuth(Role.PSYCHOLOGIST), SlotControllers.createSlots);
 
-router.get("/", checkAuth(Role.ADMIN, Role.SUPER_ADMIN, Role.PSYCHOLOGIST, Role.USER), SlotControllers.getAllSlots);
+router.get("/", checkAuth(...Object.values(Role)), SlotControllers.getAllSlots);
 
 router.delete("/:id", checkAuth(Role.PSYCHOLOGIST, Role.ADMIN, Role.SUPER_ADMIN), SlotControllers.deleteSlotById);
 

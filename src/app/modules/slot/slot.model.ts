@@ -1,5 +1,5 @@
 import { Schema, model } from "mongoose";
-import { ISlot } from "./slot.interface";
+import { ISlot, SLOT_BOOKING_STATUS } from "./slot.interface";
 
 const slotSchema = new Schema<ISlot>(
   {
@@ -10,7 +10,9 @@ const slotSchema = new Schema<ISlot>(
     endTime: { type: String, required: true },
     sessionTime: { type: Number, required: true },
     meditationTime: { type: Number, default: 0 },
-    isBooked: { type: Boolean, default: false },
+    slotBookingStatus: {type: String, 
+                enum: Object.values(SLOT_BOOKING_STATUS), 
+                default: SLOT_BOOKING_STATUS.AVAILABLE },
     isDeleted: { type: Boolean, default: false },
   },
   { 
