@@ -130,7 +130,7 @@ const createBooking = async (
 
     await session.commitTransaction();
     session.endSession();
-    console.log("Payment URL:", sslPayment.GatewayPageURL);
+    // console.log("Payment URL:", sslPayment.GatewayPageURL);
     return {
       paymentUrl: sslPayment.GatewayPageURL,
       booking: updatedBooking,

@@ -36,7 +36,6 @@ const approvePsychologist = catchAsync(async (req:Request, res:Response, next: N
 });
 
 const getAllPsychologists = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
-    console.log("from function")
   const result = await PsychologistServices.getAllPsychologists();
 
   sendResponse(res, {

@@ -129,7 +129,7 @@ const successPayment = async (query: Record<string, string>) => {
       pdfBuffer,
       "invoice",
     );
-    console.log("Cloudinary Result:", cloudinaryResult);
+    // console.log("Cloudinary Result:", cloudinaryResult);
 
     if (!cloudinaryResult) {
       throw new AppError(401, "Error uploading pdf");
