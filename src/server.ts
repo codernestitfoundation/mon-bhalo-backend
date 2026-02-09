@@ -5,6 +5,7 @@ import mongoose from "mongoose";
 import app from "./app";
 import { envVars } from "./app/config/env";
 import { seedSuperAdmin } from "./app/utils/seedSuperAdmin";
+import { connectRedis } from "./app/config/redis.config";
 
 let server: Server;
 
@@ -21,8 +22,11 @@ const startServer = async () => {
   }
 }
 
-startServer();
-seedSuperAdmin();
+(async () => {
+  await connectRedis()
+  await startServer()
+  await seedSuperAdmin()
+})();
 
 
 process.on("SIGINT", () => {
@@ -54,6 +58,7 @@ process.on("unhandledRejection", () => {
 }
     process.exit(1);
 });
+
 
 process.on("uncaughtException", () => {
     console.log("Uncaught Exception is detected, we are closing our server...");

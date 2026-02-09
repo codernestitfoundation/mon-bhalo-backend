@@ -46,9 +46,10 @@ const sslPaymentInit = async (payload: ISSLCommerz) => {
             method: "POST",
             url: envVars.SSL.SSL_PAYMENT_API,
             data: data,
-            headers: { "Content-Type": "application/x-www-form-urlencoded" }
+            headers: { "Content-Type": "application/x-www-form-urlencoded" },
+            
         })
-
+        // console.log("SSLCommerz Init Response:", response.data);
         return response.data;
 
     } catch (error: any) {

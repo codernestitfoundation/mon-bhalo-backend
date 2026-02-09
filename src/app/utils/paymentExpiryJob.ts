@@ -18,7 +18,7 @@ const processExpiredPayments = async () => {
       $in: [
         PAYMENT_STATUS.UNPAID,
         PAYMENT_STATUS.FAILED,
-        PAYMENT_STATUS.CANCELED,
+        PAYMENT_STATUS.CANCELLED,
         PAYMENT_STATUS.REFUNDED,
       ],
     },
@@ -36,7 +36,7 @@ const processExpiredPayments = async () => {
         ![
           PAYMENT_STATUS.UNPAID,
           PAYMENT_STATUS.FAILED,
-          PAYMENT_STATUS.CANCELED,
+          PAYMENT_STATUS.CANCELLED,
           PAYMENT_STATUS.REFUNDED,
         ].includes(freshPayment.status)
       ) {

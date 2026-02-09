@@ -3,7 +3,7 @@ import { Types } from "mongoose";
 export enum SLOT_BOOKING_STATUS {
   AVAILABLE = "AVAILABLE",
   BOOKED = "BOOKED",
-  CONFIRM = "CONFIRM",
+  CONFIRMED = "CONFIRMED",
   CANCELLED = "CANCELLED"
 }
 

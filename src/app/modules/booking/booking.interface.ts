@@ -14,4 +14,6 @@ export interface IBooking {
     paymentId?: Types.ObjectId;
     slotId: Types.ObjectId;
     status: BOOKING_STATUS;
+    createdAt?: Date;
+    updatedAt?: Date;
 }

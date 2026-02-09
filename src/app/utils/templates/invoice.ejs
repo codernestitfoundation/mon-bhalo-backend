@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Mon Bhalo - Invoice</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f5f5f5;
+            color: #333;
+            line-height: 1.6;
+        }
+        .container {
+            max-width: 900px;
+            margin: 20px auto;
+            background: white;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        .header {
+            background: linear-gradient(135deg, #4A90E2 0%, #357ABD 100%);
+            color: white;
+            padding: 40px 30px;
+            text-align: center;
+        }
+        .header h1 {
+            font-size: 36px;
+            margin-bottom: 5px;
+            font-weight: 700;
+        }
+        .header p {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+        .invoice-meta {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            width: 100%;
+            padding: 20px 30px;
+            background: #f9f9f9;
+            border-bottom: 2px solid #e0e0e0;
+        }
+        .meta-item {
+            flex: 1;
+            text-align: center;
+            font-size: 12px;
+            color: #666;
+            margin-bottom: 5px;
+            text-transform: uppercase;
+        }
+        .meta-item p {
+            font-size: 16px;
+            font-weight: 600;
+            color: #333;
+        }
+        .content {
+            padding: 30px;
+        }
+        .section {
+            margin-bottom: 30px;
+        }
+        .section-title {
+            font-size: 13px;
+            font-weight: 700;
+            color: #4A90E2;
+            text-transform: uppercase;
+            margin-bottom: 12px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #4A90E2;
+        }
+        .section-content {
+            font-size: 14px;
+            line-height: 1.8;
+        }
+        .section-content div {
+            margin-bottom: 5px;
+        }
+        .label {
+            color: #666;
+            font-weight: 500;
+        }
+        .value {
+            color: #333;
+            font-weight: 600;
+        }
+        .section-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+        thead {
+            background: #4A90E2;
+            color: white;
+        }
+        th {
+            padding: 12px;
+            text-align: left;
+            font-size: 13px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+        td {
+            padding: 15px 12px;
+            border-bottom: 1px solid #e0e0e0;
+            font-size: 14px;
+        }
+        tbody tr:nth-child(even) {
+            background: #f9f9f9;
+        }
+        tbody tr:hover {
+            background: #f0f5ff;
+        }
+        .text-right {
+            text-align: right;
+        }
+        .summary {
+            background: #f9f9f9;
+            padding: 20px;
+            border-radius: 6px;
+            margin-top: 20px;
+        }
+        .summary-row {
+            display: flex;
+            justify-content: flex-end;
+            margin-bottom: 10px;
+            font-size: 14px;
+        }
+        .summary-row label {
+            margin-right: 30px;
+            color: #666;
+        }
+        .summary-row .amount {
+            font-weight: 600;
+            color: #333;
+            min-width: 100px;
+            text-align: right;
+        }
+
+        .total-row label {
+            font-weight: 700;
+            font-size: 16px;
+            color: #4A90E2;
+            text-align: center;
+        }
+        .total-row .amount {
+            font-weight: 700;
+            font-size: 18px;
+            color: #4A90E2;
+        }
+        .footer {
+            background: #f9f9f9;
+            padding: 20px 30px;
+            text-align: center;
+            border-top: 2px solid #e0e0e0;
+            font-size: 13px;
+            color: #666;
+        }
+        .footer p {
+            margin-bottom: 8px;
+        }
+        .footer a {
+            color: #4A90E2;
+            text-decoration: none;
+        }
+        .footer a:hover {
+            text-decoration: underline;
+        }
+        .status-badge {
+            display: inline-block;
+            background: #4CAF50;
+            color: white;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-top: 10px;
+        }
+        .highlight {
+            color: #4A90E2;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1>MON BHALO</h1>
+            <p>Professional Mental Health Services</p>
+        </div>
+
+        <!-- Invoice Meta Information -->
+        <div class="invoice-meta">
+            <div class="meta-item">
+                <h3>Invoice Number</h3>
+                <p><%= transactionId %></p>
+            </div>
+            <div class="meta-item">
+                <h3>Booking Date</h3>
+                <p><%= bookingDate %></p>
+            </div>
+            <div class="meta-item">
+                <h3>Status</h3>
+                <p><span class="status-badge">PAID</span></p>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="content">
+            <!-- Bill To Section -->
+            <div class="section">
+                <div class="section-title">Bill To</div>
+                <div class="section-content">
+                    <div>
+                        <span class="label">Client Name:</span>
+                        <span class="value"><%= userName %></span>
+                    </div>
+                    <% if (userEmail) { %>
+                    <div>
+                        <span class="label">Client Email:</span>
+                        <span class="value"><%= userEmail %></span>
+                    </div>
+                    <% } %>
+                    <% if (userPhoneNumber) { %>
+                    <div>
+                        <span class="label">Client Phone Number:</span>
+                        <span class="value"><%= userPhoneNumber %></span>
+                    </div>
+                    <% } %>
+                </div>
+            </div>
+
+            <!-- Service Provider Section -->
+            <div class="section">
+                <div class="section-title">Service Provider</div>
+                <div class="section-content">
+                    <div>
+                        <span class="label">Psychologist Name:</span>
+                        <span class="value"><%= psychologistName %></span>
+                    </div>
+                    <% if (psychologistEmail) { %>
+                    <div>
+                        <span class="label">Psychologist Email:</span>
+                        <span class="value"><%= psychologistEmail %></span>
+                    </div>
+                    <% } %>
+                    
+                </div>
+            </div>
+
+            <!-- Session Details Section -->
+            <div class="section">
+                <div class="section-title">Session Details</div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Description</th>
+                            <th>Session Date</th>
+                            <th>Time</th>
+                            <th class="text-right">Fee</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Therapy Session</td>
+                            <td><%= slotDate || '-' %></td>
+                            <td><%= startTime && endTime ? startTime + ' - ' + endTime : '-' %></td>
+                            <td class="text-right"><strong>৳ <%= (sessionFee || 0).toFixed(2) %></strong></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Summary Section -->
+            <div class="summary">
+                <div class="summary-row total-row">
+                    <label>Total Amount:</label>
+                    <span class="amount">৳ <%= (sessionFee || 0).toFixed(2) %></span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+            <p>Thank you for choosing <span class="highlight">Mon Bhalo</span> for your mental health care!</p>
+            <p>For questions or concerns, please contact us at <a href="email:support@monbhalo.com">support@monbhalo.com</a></p>
+            <p style="margin-top: 15px; border-top: 1px solid #ddd; padding-top: 15px; color: #999;">
+                © 2026 Mon Bhalo. All Rights Reserved.
+            </p>
+        </div>
+    </div>
+</body>
+</html>

@@ -4,6 +4,8 @@ import { AuthRoutes } from "../modules/auth/auth.route";
 import { PsychologistRoutes } from "../modules/psychologist/psychologist.route";
 import { SlotRoutes } from "../modules/slot/slot.route";
 import { BookingRoutes } from "../modules/booking/booking.route";
+import { PaymentRoutes } from '../modules/payment/payment.route';
+import { OtpRoutes } from "../modules/otp/otp.route";
 
 
 const router = Router();
@@ -29,6 +31,14 @@ const moduleRoutes = [
         path: '/booking',
         route: BookingRoutes
     },
+    {
+        path: '/payment',
+        route: PaymentRoutes
+    },
+    {
+        path: '/otp',
+        route: OtpRoutes
+    }
 ]
 
 moduleRoutes.forEach(({ path, route }) => {
