@@ -24,7 +24,7 @@ router.patch(
   PsychologistControllers.approvePsychologist,
 );
 
-router.get("/", checkAuth(Role.ADMIN, Role.SUPER_ADMIN), PsychologistControllers.getAllPsychologists);
+router.get("/", checkAuth(...Object.values(Role)), PsychologistControllers.getAllPsychologists);
 
 router.patch(
   "/:id",

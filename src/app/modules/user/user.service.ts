@@ -18,7 +18,7 @@ const createUser = async (payload: Partial<IUser>) => {
 
   const hashedPassword = await bcrypt.hash(
     password as string,
-    Number(envVars.BCRYPT_SALT_ROUNDS),
+    Number(envVars.BCRYPT_SALT_ROUND),
   );
   payload.password = hashedPassword;
 
@@ -48,7 +48,7 @@ const updateUser = async (userId: string, payload: Partial<IUser>, decodedToken:
 
     if (decodedToken.role === Role.USER || decodedToken.role === Role.PSYCHOLOGIST) {
         if (userId !== decodedToken.id) {
-            throw new AppError(401, "You are not authorized 1")
+            throw new AppError(httpStatus.UNAUTHORIZED, "You are not authorized")
         }
     }
 
@@ -59,7 +59,7 @@ const updateUser = async (userId: string, payload: Partial<IUser>, decodedToken:
     }
 
     if (decodedToken.role === Role.ADMIN && isUserExist.role === Role.SUPER_ADMIN) {
-        throw new AppError(401, "You are not authorized")
+        throw new AppError(httpStatus.UNAUTHORIZED, "You are not authorized")
     }
 
     if (payload.role) {

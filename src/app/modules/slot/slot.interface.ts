@@ -1,5 +1,12 @@
 import { Types } from "mongoose";
 
+export enum SLOT_BOOKING_STATUS {
+  AVAILABLE = "AVAILABLE",
+  BOOKED = "BOOKED",
+  CONFIRMED = "CONFIRMED",
+  CANCELLED = "CANCELLED"
+}
+
 export interface ISlot {
   psychologistId: Types.ObjectId;
   date: string; 
@@ -8,6 +15,6 @@ export interface ISlot {
   endTime: string; 
   sessionTime: number;    
   meditationTime: number;
-  isBooked?: boolean;
+  slotBookingStatus: SLOT_BOOKING_STATUS;
   isDeleted?: boolean;
 }

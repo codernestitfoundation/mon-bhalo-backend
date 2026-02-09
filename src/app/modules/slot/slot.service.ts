@@ -2,7 +2,7 @@ import httpStatus from "http-status-codes";
 import AppError from "../../errorHelpers/AppError";
 import { QueryBuilder } from "../../utils/QueryBuilder";
 import { Psychologist } from "../psychologist/psychologist.model";
-import { ISlot } from "./slot.interface";
+import { ISlot, SLOT_BOOKING_STATUS } from "./slot.interface";
 import { Slot } from "./slot.model";
 import { generateTimeSlots } from "./slot.utils";
 
@@ -149,7 +149,7 @@ const deleteSlotsByDate = async (userId: string, date: string) => {
   const booked = await Slot.findOne({
     psychologistId: psychologist?._id,
     date,
-    isBooked: true,
+    slotBookingStatus: { $in: [SLOT_BOOKING_STATUS.BOOKED, SLOT_BOOKING_STATUS.CONFIRMED] },
   });
 
   if (booked)
@@ -186,7 +186,7 @@ const deleteSlotById = async (
     throw new AppError(httpStatus.NOT_FOUND, "Slot not found.");
   }
 
-  if (slot.isBooked) {
+  if (slot.slotBookingStatus === SLOT_BOOKING_STATUS.CONFIRMED) {
     throw new AppError(httpStatus.BAD_REQUEST, "Cannot delete a booked slot.");
   }
 
