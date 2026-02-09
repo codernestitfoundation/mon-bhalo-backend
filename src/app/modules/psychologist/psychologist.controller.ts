@@ -75,10 +75,11 @@ const deletePsychologist = catchAsync(async (req:Request, res:Response, next: Ne
   });
 });
 
+
 export const PsychologistControllers = {
   applyAsPsychologist,
   approvePsychologist,
   getAllPsychologists,
   updatePsychologist,
-  deletePsychologist
+  deletePsychologist,
 };

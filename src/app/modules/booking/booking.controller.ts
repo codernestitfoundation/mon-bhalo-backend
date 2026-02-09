@@ -69,6 +69,21 @@ const updateBookingStatus = catchAsync(
     }
 );
 
+const completeAndRateSession = catchAsync(async (req: Request, res: Response) => {
+  const { bookingId } = req.params;
+  const { rating } = req.body; // Expecting 1-5
+  const {id} = req.user as JwtPayload; // From checkAuth middleware
+
+  const result = await BookingService.completeBookingAndRate(bookingId as string, rating, id);
+
+  sendResponse(res, {
+    statusCode: 200,
+    success: true,
+    message: "Thank you for your feedback!",
+    data: result,
+  });
+});
+
 
 export const BookingController = {
     createBooking,
@@ -76,4 +91,5 @@ export const BookingController = {
     getSingleBooking,
     getUserBookings,
     updateBookingStatus,
+    completeAndRateSession
 }
