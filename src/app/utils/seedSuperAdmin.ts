@@ -11,7 +11,7 @@ export const seedSuperAdmin = async () => {
             console.log("Super Admin already exists");
             return;
         }
-        const hashedPassword = await bcrypt.hash(envVars.SUPER_ADMIN_PASSWORD as string, Number(envVars.BCRYPT_SALT_ROUNDS));
+        const hashedPassword = await bcrypt.hash(envVars.SUPER_ADMIN_PASSWORD as string, Number(envVars.BCRYPT_SALT_ROUND));
 
         const authProvider: IAuthProvider = {
             providerName: "credentials",

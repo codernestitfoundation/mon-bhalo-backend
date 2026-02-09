@@ -17,6 +17,7 @@ export enum IsActive {
   INACTIVE = "INACTIVE",
   BLOCKED = "BLOCKED",
 }
+
 export enum Gender {
   MALE = "MALE",
   FEMALE = "FEMALE",
@@ -29,6 +30,7 @@ export interface IUser {
     firstName: string;
     lastName: string;
   };
+  fullName?: string;
   email: string;
   gender?: Gender;
   dob?: Date;

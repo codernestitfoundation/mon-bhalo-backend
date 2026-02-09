@@ -1,11 +1,11 @@
-import mongoose from "mongoose";
 import httpStatus from "http-status-codes";
+import { JwtPayload } from "jsonwebtoken";
+import mongoose from "mongoose";
 import AppError from "../../errorHelpers/AppError";
-import { Psychologist } from "./psychologist.model";
+import { IsActive, Role } from "../user/user.interface";
 import { User } from "../user/user.model";
 import { ApplicationStatus, IPsychologist } from "./psychologist.interface";
-import { Role } from "../user/user.interface";
-import { JwtPayload } from "jsonwebtoken";
+import { Psychologist } from "./psychologist.model";
 
 const applyAsPsychologist = async (userId: string, payload: IPsychologist) => {
   const isExist = await Psychologist.findOne({ userId });
@@ -24,7 +24,7 @@ const approvePsychologist = async (id: string) => {
   try {
     const profile = await Psychologist.findByIdAndUpdate(
       id,
-      { status: ApplicationStatus.APPROVED },
+      { status: ApplicationStatus.APPROVED, isActive: IsActive.ACTIVE },
       { session, new: true },
     );
 
@@ -63,11 +63,11 @@ const approvePsychologist = async (id: string) => {
 };
 
 const getAllPsychologists = async () => {
-  // const psychologist = await Psychologist.find({ status: ApplicationStatus.APPROVED })
-  const psychologist = await Psychologist.find({
+  // const psychologists = await Psychologist.find({ status: ApplicationStatus.APPROVED })
+  const psychologists = await Psychologist.find({
     status: ApplicationStatus.APPROVED,
-    isActive: true,
-    isDeleted:false
+    isActive: IsActive.ACTIVE,
+    isDeleted: false,
   }).populate({
     path: "userId",
     select: "-password -auths -isDeleted",
@@ -76,7 +76,7 @@ const getAllPsychologists = async () => {
   const totalPsychologist = await Psychologist.countDocuments();
 
   const data = {
-    psychologist,
+    psychologists,
     meta: {
       total: totalPsychologist,
     },
@@ -129,21 +129,24 @@ const deletePsychologist = async (id: string) => {
   try {
     const profile = await Psychologist.findByIdAndUpdate(
       id,
-      { 
-        isDeleted: true, 
-        isActive: false, 
-        status: ApplicationStatus.REJECTED
+      {
+        isDeleted: true,
+        isActive: false,
+        status: ApplicationStatus.REJECTED,
       },
-      { new: true, session }, 
+      { new: true, session },
     );
 
     if (!profile) {
-      throw new AppError(httpStatus.NOT_FOUND, "Psychologist profile not found");
+      throw new AppError(
+        httpStatus.NOT_FOUND,
+        "Psychologist profile not found",
+      );
     }
     const userUpdate = await User.findByIdAndUpdate(
       profile.userId,
       { role: Role.USER },
-      { session }
+      { session },
     );
 
     if (!userUpdate) {
