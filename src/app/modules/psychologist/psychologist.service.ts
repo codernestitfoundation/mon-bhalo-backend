@@ -164,6 +164,8 @@ const deletePsychologist = async (id: string) => {
   }
 };
 
+
+
 export const PsychologistServices = {
   applyAsPsychologist,
   approvePsychologist,

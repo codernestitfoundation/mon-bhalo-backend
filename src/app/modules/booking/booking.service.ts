@@ -11,6 +11,8 @@ import { User } from "../user/user.model";
 import { BOOKING_STATUS, IBooking } from "./booking.interface";
 import { Booking } from "./booking.model";
 import { SLOT_BOOKING_STATUS } from "../slot/slot.interface";
+import mongoose from "mongoose";
+import { Psychologist } from "../psychologist/psychologist.model";
 
 const createBooking = async (
   payload: Partial<IBooking>,
@@ -128,7 +130,7 @@ const createBooking = async (
 
     await session.commitTransaction();
     session.endSession();
-    console.log("Payment URL:", sslPayment.GatewayPageURL);
+    // console.log("Payment URL:", sslPayment.GatewayPageURL);
     return {
       paymentUrl: sslPayment.GatewayPageURL,
       booking: updatedBooking,
@@ -158,10 +160,70 @@ const getAllBookings = async () => {
   return {};
 };
 
+
+
+const completeBookingAndRate = async (
+  bookingId: string, 
+  rating: number, 
+  userId: string
+) => {
+  const session = await mongoose.startSession();
+  session.startTransaction();
+
+  try {
+    // 1. Find the booking and verify ownership/status
+    const booking = await Booking.findOne({ _id: bookingId, userId }).session(session);
+    
+    if (!booking) {
+      throw new AppError(httpStatus.NOT_FOUND, "Booking not found or unauthorized");
+    }
+    if (booking.status === BOOKING_STATUS.COMPLETED) {
+      throw new AppError(httpStatus.BAD_REQUEST, "This session has already been rated");
+    }
+
+    // 2. Update Booking Status
+    await Booking.findByIdAndUpdate(
+      bookingId, 
+      { status: BOOKING_STATUS.COMPLETED }, 
+      { session }
+    );
+
+    // 3. Update Psychologist Rating & Session Count
+    const psychologist = await Psychologist.findById(booking.psychologistId).session(session);
+    if (!psychologist) throw new AppError(httpStatus.NOT_FOUND, "Psychologist not found");
+
+    if (rating < 1 || rating > 5) {
+      throw new AppError(httpStatus.BAD_REQUEST, "Rating must be between 1 and 5");
+    }
+
+    const currentTotal = psychologist.totalSessions || 0;
+    const currentRating = psychologist.rating || 0;
+    const newAverage = (currentRating * currentTotal + rating) / (currentTotal + 1);
+
+    await Psychologist.findByIdAndUpdate(
+      booking.psychologistId,
+      {
+        rating: Number(newAverage.toFixed(1)),
+        $inc: { totalSessions: 1 }
+      },
+      { session, runValidators: true }
+    );
+
+    await session.commitTransaction();
+    return { message: "Session completed and rating submitted" };
+  } catch (error) {
+    await session.abortTransaction();
+    throw error;
+  } finally {
+    session.endSession();
+  }
+};
+
 export const BookingService = {
   createBooking,
   getUserBookings,
   getBookingById,
   updateBookingStatus,
   getAllBookings,
+  completeBookingAndRate
 };

@@ -165,7 +165,7 @@ export const generatePdf = async (
       doc.end();
     });
   } catch (error: any) {
-    console.log(error);
+    // console.log(error);
     throw new AppError(401, `Pdf creation error ${error.message}`);
   }
 };

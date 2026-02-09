@@ -36,7 +36,6 @@ const approvePsychologist = catchAsync(async (req:Request, res:Response, next: N
 });
 
 const getAllPsychologists = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
-    console.log("from function")
   const result = await PsychologistServices.getAllPsychologists();
 
   sendResponse(res, {
@@ -75,10 +74,11 @@ const deletePsychologist = catchAsync(async (req:Request, res:Response, next: Ne
   });
 });
 
+
 export const PsychologistControllers = {
   applyAsPsychologist,
   approvePsychologist,
   getAllPsychologists,
   updatePsychologist,
-  deletePsychologist
+  deletePsychologist,
 };

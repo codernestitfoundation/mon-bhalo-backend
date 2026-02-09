@@ -4,14 +4,13 @@ import { checkAuth } from "../../middlewares/checkAuth";
 import { validateRequest } from "../../middlewares/validateRequest";
 import { Role } from "../user/user.interface";
 import { BookingController } from "./booking.controller";
-import { updateBookingStatusZodSchema, createBookingZodSchema } from "./booking.validation";
+import { updateBookingStatusZodSchema } from "./booking.validation";
 
 const router = express.Router();
 
 // api/v1/booking
 router.post("/",
     checkAuth(...Object.values(Role)),
-    // validateRequest(createBookingZodSchema),
     BookingController.createBooking
 );
 
@@ -38,6 +37,13 @@ router.patch("/:bookingId/status",
     checkAuth(...Object.values(Role)),
     validateRequest(updateBookingStatusZodSchema),
     BookingController.updateBookingStatus
+);
+
+// api/v1/booking//:bookingId/complete-and-rate
+router.patch(
+  "/:bookingId/complete-and-rate",
+  checkAuth(Role.USER),
+  BookingController.completeAndRateSession
 );
 
 export const BookingRoutes = router;
