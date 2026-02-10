@@ -24,7 +24,7 @@ router.patch(
   PsychologistControllers.approvePsychologist,
 );
 
-router.get("/", checkAuth(...Object.values(Role)), PsychologistControllers.getAllPsychologists);
+router.get("/", PsychologistControllers.getAllPsychologists);
 
 router.patch(
   "/:id",
